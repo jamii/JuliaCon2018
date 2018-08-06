@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Julia as a platform for language development</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      
+      .remark-slide-content {
+        padding: 20px;
+        }
+        
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 100%;
+        float: left;
+        padding: 0px;
+      }
+      
+      .left-column h1 {
+        margin-top: 0px;
+        }
+        .left-column h1:last-child, .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding: 0px;
+      }
+      
+      .footnote {
+        font-size: 0.8em;
+       }
+      
+      img {
+      max-width: 100%
+      }
+      
+          blockquote {
+border-left: 2px solid #333333 !important;
+  margin: 0px -10px 20px -10px;
+  padding: 0px 10px 0px 10px;
+  border-radius: 5px;
+    }
+      
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+class: center middle
+
+# Julia as a platform for language development
+
+Jamie Brandon &lt; jamie@scattered-thoughts.net &gt;
+
+---
+
+.left-column[
+  # Background
+]
+
+---
+
+.left-column[
+  # Background
+  ## Eve (2013-2016)
+]
+
+.right-column[
+
+Declarative language for CRUD apps
+
+Live-coding editor
+
+C/Rust/JS
+
+![Eve](chat.png)
+
+.footnote[http://incidentalcomplexity.com/archive/]
+
+]
+
+---
+
+.left-column[
+  # Background
+  ## Eve (2013-2016)
+  ## Imp (2016-2017)
+]
+
+.right-column[
+
+Datalog compiler
+
+Incrementally maintained GUIs
+
+Resilient live-coding 
+
+100% Julia!
+
+![Imp](imp.png)
+
+.footnote[http://scattered-thoughts.net/blog/2016/10/11/a-practical-relational-query-compiler-in-500-lines/]
+
+.footnote[http://scattered-thoughts.net/blog/2017/07/28/relational-ui/]
+
+]
+
+---
+
+.left-column[
+  # Background
+  ## Eve (2013-2016)
+  ## Imp (2016-2017)
+  ## RelationalAI (2017-2018)
+]
+
+.right-column[
+
+Database engine, probabilistic programming language, machine learning algorithms
+
+90% Julia!
+
+![RAI](rai.png)
+
+.footnote[https://arxiv.org/pdf/1703.04780.pdf]
+
+.footnote[http://relational.ai/]
+
+]
+
+---
+
+.left-column[
+# State of the art
+]
+
+.right-column[
+> ...we know from experience that languages that exist solely in the mind or on paper are mostly worthless: it is only when they are implemented and we can try them out that we can evaluate them.
+
+> ...how much implementation is needed to show that a language design is good?
+
+> If too little, the language will be dismissed out of hand as unusably slow: the kiss of death for many a language. Especially if the language design is adventurous, the language designer may not even be sure that it can be made adequately efficient.
+
+> If too much, low-level fiddling will have consumed most of the energy that should have gone into design. Even worse, low-level implementation concerns can easily end up dictating higher-level design choices, to the disadvantage of the latter.
+
+.footnote[http://tratt.net/laurie/blog/entries/fast_enough_vms_in_fast_enough_time.html]
+]
+
+---
+
+.left-column[
+# State of the art
+## Virtual machines
+]
+
+.right-column[
+Virtual machines - share the infrastructure
+* Java Virtual Machine
+* Common Language Runtime
+* Web Assembly
+]
+
+---
+
+.left-column[
+# State of the art
+## Virtual machines
+## Multi-stage programming
+]
+
+.right-column[
+Multi-stage programming (≈ JIT code generation)
+* LMS/Squid (https://github.com/epfldata/squid)
+* MetaOcaml (http://okmij.org/ftp/ML/MetaOCaml.html)
+* Terra (http://terralang.org/)
+]
+
+---
+
+.left-column[
+# State of the art
+## Virtual machines
+## Multi-stage programming
+## Specialization
+]
+
+.right-column[
+Specialization - write an interpreter, get a compiler
+* Graal/Truffle (https://github.com/oracle/graal)
+* RPython (https://rpython.readthedocs.io/en/latest/)
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+> ... do the metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever) for the performance-intensive systems code and the code that needs to work with massive data. 
+
+> Scala or Haskell will do well; doing it in Julia sounds more like a party trick to me.
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+... **doing it in Julia sounds more like a party trick to me**...
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+... **metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever)**...
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+Julia:
+
+* Dynamic language
+* JIT
+
+= JavaScript with matrices
+]
+
+---
+
+.left-column[
+# Julia
+## ...as compiler language
+]
+
+.right-column[
+* Code as data, quasiquoting, eval
+* Algebraic datatypes\*, pattern matching, generic traversals
+* Strong, parametric, dependent types
+* Interactive development
+]
+
+---
+
+.left-column[
+# Julia
+## ...as compiler language
+## ...as target language
+]
+
+.right-column[
+* Predictable performance, introspection
+* (Partial) control over layout, stack allocation
+* Hooks into compilation process (@generated, Cassette etc)
+* @goto
+* ccall, llvmcall, pointers
+]
+
+---
+
+.left-column[
+# Example
+]
+
+---
+
+.left-column[
+# Example
+]
+
+.right-column[
+```
+select count(*) 
+from holidays_events 
+join train 
+on holidays_events.date = train.date 
+where holidays_events.transferred = true;
+```
+]
+
+---
+
+.left-column[
+# Example
+]
+
+.right-column[
+```
+ Aggregate  (cost=24799.60..24799.61 rows=1 width=0) (actual time=137.414..137.414 rows=1 loops=1)
+   ->  Hash Join  (cost=7.65..24781.61 rows=7196 width=0) (actual time=0.045..137.018 rows=5515 loops=1)
+         Hash Cond: (train.date = holidays_events.date)
+         ->  Seq Scan on train  (cost=0.00..17202.00 rows=1000000 width=4) (actual time=0.004..66.110 rows=1000000 loops=1)
+         ->  Hash  (cost=7.50..7.50 rows=12 width=4) (actual time=0.031..0.031 rows=12 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               ->  Seq Scan on holidays_events  (cost=0.00..7.50 rows=12 width=4) (actual time=0.004..0.028 rows=12 loops=1)
+                     Filter: transferred
+                     Rows Removed by Filter: 338
+                     
+ Planning time: 0.129 ms
+ Execution time: `137.437 ms`
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+abstract type Query end
+
+struct Constant <: Query
+    value
+end
+
+struct Join <: Query
+    key::Int64
+    index::Dict
+    input::Query
+end
+
+struct Filter <: Query
+    condition::Function
+    input::Query
+end
+
+struct Count <: Query
+    input::Query
+end
+```
+]
+                
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+Count(
+  Filter((row) -> row[end] === true,
+    Join(2, make_index(holidays_events, 1),
+      Constant(train)
+    )
+  )
+)
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = iterate(join.input, state)
+        next === nothing && return nothing
+        (input_row, state) = next
+        join_row = get(join.index, input_row[join.key], nothing)
+        join_row !== nothing && return ((input_row..., join_row...), state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+BenchmarkTools.Trial: 
+  memory estimate:  455.22 MiB
+  allocs estimate:  18338076
+  --------------
+  minimum time:     989.880 ms (4.38% GC)
+  median time:      1.031 s (4.30% GC)
+  mean time:        1.029 s (5.32% GC)
+  maximum time:     1.052 s (9.27% GC)
+  --------------
+  samples:          5
+  evals/sample:     1
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = `iterate(join.input, state)`
+        next === nothing && return nothing
+        (input_row, state) = next
+        join_row = get(join.index, input_row[join.key], nothing)
+        join_row !== nothing && return ((input_row..., join_row...), state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = iterate(join.input, state)
+        next === nothing && return nothing
+        `(input_row, state) = next`
+        join_row = get(join.index, input_row[join.key], nothing)
+        join_row !== nothing && return ((input_row..., join_row...), state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = iterate(join.input, state)
+        next === nothing && return nothing
+        (input_row, state) = next
+        join_row = `get(join.index, input_row[join.key], nothing)`
+        join_row !== nothing && return ((input_row..., join_row...), state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = iterate(join.input, state)
+        next === nothing && return nothing
+        (input_row, state) = next
+        join_row = get(join.index, input_row[join.key], nothing)
+        join_row !== nothing && return (`(input_row..., join_row...)`, state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        let input_iterator = $(iterator(join.input))
+            (state=nothing) -> begin
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get($(join.index), input_row[$(join.key)], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            end
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        let input_iterator = $(iterator(join.input))
+            (state=nothing) -> begin
+                while true
+                    `next = input_iterator(state)`
+                    `next === nothing && return nothing`
+                    `(input_row, state) = next`
+                    `join_row = get($(join.index), input_row[$(join.key)], nothing)`
+                    `join_row !== nothing && return ((input_row..., join_row...), state)`
+                end
+            end
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    `quote`
+        let input_iterator = $(iterator(join.input))
+            (state=nothing) -> begin
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get($(join.index), input_row[$(join.key)], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            end
+        end
+    `end`
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        let input_iterator = `$(iterator(join.input))`
+            (state=nothing) -> begin
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get(`$(join.index)`, input_row[`$(join.key)`], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            end
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+query_iterator = eval(iterator(query))
+Base.invokelatest(query_iterator, nothing)
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+BenchmarkTools.Trial: 
+  memory estimate:  32 bytes
+  allocs estimate:  1
+  --------------
+  minimum time:     14.737 ms (0.00% GC)
+  median time:      15.376 ms (0.00% GC)
+  mean time:        15.366 ms (0.00% GC)
+  maximum time:     19.289 ms (0.00% GC)
+  --------------
+  samples:          326
+  evals/sample:     1
+```
+
+**~60-70x faster**
+
+**~9x faster than postgres\* **
+
+**no allocation**
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        let input_iterator = $(iterator(join.input))
+            `(state=nothing) -> begin`
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get($(join.index), input_row[$(join.key)], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            `end`
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(count::Count)
+    quote
+        let `input_iterator = $(iterator(count.input))`
+            (state=nothing) -> begin
+                if state === nothing
+                    result = 0
+                    next = `input_iterator(nothing)`
+                    while next !== nothing
+                        (_, state) = next
+                        result += 1
+                        next = `input_iterator(state)`
+                    end
+                    return ((result,), true)
+                end
+            end
+        end
+    end
+end
+```
+]
+
+
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        `let input_iterator` = $(iterator(join.input))
+            (state=nothing) -> begin
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get($(join.index), input_row[$(join.key)], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            end
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    quote
+        let input_iterator = `(let input_interator = ...)`
+            (state=nothing) -> begin
+                while true
+                    next = input_iterator(state)
+                    next === nothing && return nothing
+                    (input_row, state) = next
+                    join_row = get($(join.index), input_row[$(join.key)], nothing)
+                    join_row !== nothing && return ((input_row..., join_row...), state)
+                end
+            end
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    key = lift(join.key)
+    index = join.index
+    input_iterator = iterator(join.input)
+    function iterate(state=nothing)
+        while true
+            next = input_iterator(state)
+            next === nothing && return nothing
+            (input_row, state) = next
+            join_row = get(index, input_row[unlift(key)], nothing)
+            join_row !== nothing && return ((input_row..., join_row...), state)
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    key = lift(join.key)
+    index = join.index
+    input_iterator = iterator(join.input)
+    `function iterate(state=nothing)`
+        while true
+            next = input_iterator(state)
+            next === nothing && return nothing
+            (input_row, state) = next
+            join_row = get(index, input_row[unlift(key)], nothing)
+            join_row !== nothing && return ((input_row..., join_row...), state)
+        end
+    `end`
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    `key = lift(join.key)`
+    `index = join.index`
+    `input_iterator = iterator(join.input)`
+    function iterate(state=nothing)
+        while true
+            next = input_iterator(state)
+            next === nothing && return nothing
+            (input_row, state) = next
+            join_row = get(index, input_row[unlift(key)], nothing)
+            join_row !== nothing && return ((input_row..., join_row...), state)
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+function iterator(join::Join)
+    `key = lift(join.key)`
+    index = join.index`
+    input_iterator = iterator(join.input)
+    function iterate(state=nothing)
+        while true
+            next = input_iterator(state)
+            next === nothing && return nothing
+            (input_row, state) = next
+            join_row = get(index, input_row[`unlift(key)`], nothing)
+            join_row !== nothing && return ((input_row..., join_row...), state)
+        end
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+lift(x) = Val{x}()
+
+unlift(::Val{x}) where x = x
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+]
+
+.right-column[
+```
+BenchmarkTools.Trial: 
+  memory estimate:  32 bytes
+  allocs estimate:  1
+  --------------
+  minimum time:     16.174 ms (0.00% GC)
+  median time:      17.648 ms (0.00% GC)
+  mean time:        17.380 ms (0.00% GC)
+  maximum time:     20.844 ms (0.00% GC)
+  --------------
+  samples:          288
+  evals/sample:     1
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+What is a closure?
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+julia> query_iterator = iterator(query);
+
+julia> typeof(query_iterator)
+ getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")){Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+julia> query_iterator = iterator(query);
+
+julia> typeof(query_iterator)
+ `getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5"))`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+julia> query_iterator = iterator(query);
+
+julia> typeof(query_iterator)
+ `Main.JuliaCon2018.Test3.#iterate#5`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+julia> fieldnames(query_iterator)
+(:key, :index, :input_iterator)
+
+julia> query_iterator.key
+Val{2}()
+
+julia> Main.JuliaCon2018.Test3> methods(query_iterator)
+# 2 methods for generic function "iterate":
+[1] (::getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")))() in Main.JuliaCon2018.Test3 at /home/jamie/JuliaCon2018/src/Test3.jl:45
+[2] (::getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")))(state) in Main.JuliaCon2018.Test3 at /home/jamie/JuliaCon2018/src/Test3.jl:45
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+struct Constant{`Value`}
+    value::`Value`
+end
+
+struct Join{`Key, Index, Input`}
+    key::`Key`
+    index::`Index`
+    input::`Input`
+end
+
+struct Filter{`Condition, Input`}
+    condition::`Condition`
+    input::`Input`
+end
+
+struct Count{`Input`}
+    input::`Input`
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+Count(
+  Filter((row) -> row[end] === true,
+    Join(`lift(2)`, make_index(holidays_events, 1),
+      Constant(train)
+    )
+  )
+)
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+function Base.iterate(join::Join, state=nothing)
+    while true
+        next = iterate(join.input, state)
+        next === nothing && return nothing
+        (input_row, state) = next
+        join_row = get(join.index, input_row[`unlift(join.key)`], nothing)
+        join_row !== nothing && return ((input_row..., join_row...), state)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+]
+
+.right-column[
+```
+BenchmarkTools.Trial: 
+  memory estimate:  0 bytes
+  allocs estimate:  0
+  --------------
+  minimum time:     16.351 ms (0.00% GC)
+  median time:      16.573 ms (0.00% GC)
+  mean time:        16.974 ms (0.00% GC)
+  maximum time:     21.138 ms (0.00% GC)
+  --------------
+  samples:          295
+  evals/sample:     1
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+]
+
+.right-column[
+```
+Count(
+  Filter(`(row) -> row[end] === true`,
+    Join(lift(2), make_index(holidays_events, 1),
+      Constant(train)
+    )
+  )
+)
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+]
+
+.right-column[
+```
+ function iterator(constant::Constant)
+    value = constant.value
+    function iterate(state=nothing)
+        state === nothing && (state = 1)
+        state > length(value[1]) && return nothing
+        (`get_row(value, state)`, state+1)
+    end
+ end
+
+ `@generated function get_row`(columns::Tuple, r)
+    quote
+        tuple($(@splice c in 1:tuple_length(columns) quote
+            columns[$c][r]
+        end))
+    end
+ end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+.right-column[
+```
+# before
+Filter(f,
+    Filter(g, 
+        ...
+    )
+)
+
+# after
+Filter((row) -> f(row) && g(row),
+    ...
+)
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+.right-column[
+```
+function map_query(f, constant::Constant)
+    constant
+end
+
+function map_query(f, join::Join)
+    Join(join.key, join.index, f(join.input))
+end
+
+function map_query(f, filter::Filter)
+    Filter(filter.condition, f(filter.input))
+end
+
+function map_query(f, count::Count)
+    Count(f(count.input))
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+.right-column[
+```
+@generated function map_query(f, query::Query)
+    quote
+        $query($(@splice fieldname in fieldnames(query) begin
+            if `fieldtype(query, fieldname) <: Query`
+                quote f(query.$fieldname) end
+            else
+                quote query.$fieldname end
+            end
+        end))
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+.right-column[
+```
+using Rematch
+
+function optimize(query::Query)
+    @match query begin
+        `Filter(f, Filter(g, input))` => 
+            optimize(`Filter((row) -> f(row) && g(row), input)`)
+        _ => 
+            map_query(optimize, query)
+    end
+end
+```
+]
+
+---
+
+.left-column[
+# Obstacles
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+```
+query = 
+    Count(
+        Filter((row) -> row[1] > 1e8, 
+            Filter((row) -> row[1] > 1e8, 
+                Filter((row) -> row[1] > 1e8, 
+                    Constant(big_table)
+                )
+            )
+        )
+    )
+```
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+```
+big_table = (collect(1:1e9), collect(1:1e9))
+query = ...
+@benchmark iterate($query, nothing)
+```
+
+```
+BenchmarkTools.Trial: 
+  memory estimate:  0 bytes
+  allocs estimate:  0
+  --------------
+  minimum time:     4.028 s (0.00% GC)
+  median time:      4.043 s (0.00% GC)
+  mean time:        4.043 s (0.00% GC)
+  maximum time:     4.057 s (0.00% GC)
+  --------------
+  samples:          2
+  evals/sample:     1
+```
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+```
+big_table = (collect(1:1e9), String["" for _ in 1:1e9])
+query = ...
+@benchmark iterate($query, nothing)
+```
+
+```
+BenchmarkTools.Trial: 
+  memory estimate:  56.62 GiB
+  allocs estimate:  1900000001
+  --------------
+  minimum time:     13.854 s (10.93% GC)
+  median time:      13.854 s (10.93% GC)
+  mean time:        13.854 s (10.93% GC)
+  maximum time:     13.854 s (10.93% GC)
+  --------------
+  samples:          1
+  evals/sample:     1
+```
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+```
+row = (42, 7) # tuple is stack allocated
+
+row = (42, "") # tuple is heap allocated
+```
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+But isn't heap allocation cheap?
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+But isn't heap allocation cheap?
+
+**Memory access is expensive!**
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+1 cache-line = 64 bytes
+
+table scan = 1e9 rows \* 2 columns \* 8 bytes = 2.5e8 cache-lines
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+1 cache-line = 64 bytes
+
+table scan = 1e9 rows \* 2 columns \* 8 bytes = 2.5e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes >= 3.75e8 cache-lines
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+1 cache-line = 64 bytes
+
+table scan = 1e9 rows \* 2 columns \* 8 bytes = 2.5e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes >= 3.75e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes <= 1e9 cache-lines
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+1 cache-line = 64 bytes
+
+table scan = 1e9 rows \* 2 columns \* 8 bytes = 2.5e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes >= 3.75e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes <= 1e9 cache-lines 
+
+non-sequential => no prefetch
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+]
+
+.right-column[
+1 cache-line = 64 bytes
+
+table scan = 1e9 rows \* 2 columns \* 8 bytes = 2.5e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes >= 3.75e8 cache-lines
+
+tuple allocations = 1e9 rows \* 24 bytes <= 1e9 cache-lines 
+
+non-sequential => no prefetch
+
+out-of-core data-structures => paging
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+## Sources
+]
+
+.right-column[
+* Tuples/rows
+* SubArray
+* SubString
+* Default hash (Nothing, Date...)
+* Regex matching
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+## Sources
+## Mitigation
+]
+
+.right-column[
+* Escape analysis and inlining (but unpredictable)
+* Avoid direct references (but breaks composition / abstraction)
+* Pre-allocate mutable storage (but requires knowing types)
+* Arena allocation?
+]
+
+---
+
+.left-column[
+# ~~Obstacles~~
+# Controlling allocation
+## Example
+## Sources
+## Mitigation
+]
+
+.right-column[
+![](pr.png)
+![](yichao.png)
+![](yichao2.png)
+![](stefan.png)
+
+.footnote[https://discourse.julialang.org/t/immutables-with-reference-fields-why-boxed/7706/17]
+]
+
+---
+
+class: center middle
+
+Early days...
+
+---
+
+class: center middle
+
+![Imp](imp-full.png)
+
+---
+
+class: center middle
+
+# Fin
+
+Code and slides at TODO
+
+    </textarea>
+    <script src="out/remark.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightLanguage: "text",
+        highlightSpans: true,
+      });
+    </script>
+  </body>
+</html>

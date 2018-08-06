@@ -1,0 +1,6 @@
+authors = ["Jamie Brandon <jamie@scattered-thoughts.net>"]
+name = "JuliaCon2018"
+uuid = "d7b2bfdc-94be-11e8-0bb9-194d5c5e33ca"
+version = "0.1.0"
+
+[deps]
