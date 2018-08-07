@@ -16,6 +16,7 @@
       
       .remark-slide-content {
         padding: 20px;
+        overflow: hidden
         }
         
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
@@ -23,7 +24,7 @@
       /* Two-column layout */
       .left-column {
         color: #777;
-        width: 20%;
+        width: 18%;
         height: 100%;
         float: left;
         padding: 0px;
@@ -36,7 +37,7 @@
           color: #000;
         }
       .right-column {
-        width: 75%;
+        width: 80%;
         float: right;
         padding: 0px;
       }
@@ -49,12 +50,20 @@
       max-width: 100%
       }
       
+      .mini img {
+        height: 15em;
+        }
+      
           blockquote {
 border-left: 2px solid #333333 !important;
   margin: 0px -10px 20px -10px;
   padding: 0px 10px 0px 10px;
   border-radius: 5px;
-    }
+      }
+
+      .remark-code {
+      font-size: inherit;
+      }
       
     </style>
   </head>
@@ -112,7 +121,7 @@ Resilient live-coding
 
 100% Julia!
 
-![Imp](imp.png)
+.mini[![Imp](code.png)]
 
 .footnote[http://scattered-thoughts.net/blog/2016/10/11/a-practical-relational-query-compiler-in-500-lines/]
 
@@ -135,12 +144,18 @@ Database engine, probabilistic programming language, machine learning algorithms
 
 90% Julia!
 
-![RAI](rai.png)
+.mini[![RAI](rai.png)]
 
 .footnote[https://arxiv.org/pdf/1703.04780.pdf]
 
 .footnote[http://relational.ai/]
 
+]
+
+---
+
+.left-column[
+# State of the art
 ]
 
 ---
@@ -201,8 +216,8 @@ Multi-stage programming (≈ JIT code generation)
 
 .right-column[
 Specialization - write an interpreter, get a compiler
-* Graal/Truffle (https://github.com/oracle/graal)
 * RPython (https://rpython.readthedocs.io/en/latest/)
+* Graal/Truffle (https://github.com/oracle/graal)
 ]
 
 ---
@@ -1041,7 +1056,7 @@ julia> typeof(query_iterator)
 julia> query_iterator = iterator(query);
 
 julia> typeof(query_iterator)
- `Main.JuliaCon2018.Test3.#iterate#5`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
+ `Main.JuliaCon2018.Test3.Iterate5`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
 ```
 ]
 
@@ -1653,7 +1668,7 @@ out-of-core data-structures => paging
 
 class: center middle
 
-Early days...
+Party trick?
 
 ---
 
@@ -1667,7 +1682,7 @@ class: center middle
 
 # Fin
 
-Code and slides at TODO
+Code and slides at [github.com/jamii/JuliaCon2018](https://github.com/jamii/JuliaCon2018)
 
     </textarea>
     <script src="out/remark.js" type="text/javascript">
