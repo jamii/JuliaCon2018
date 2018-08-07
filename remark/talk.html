@@ -54,6 +54,10 @@
     height: 15em;
     }
     
+    .wrap pre {
+      white-space: pre-wrap;
+      }
+    
       blockquote {
 border-left: 2px solid #333333 !important;
   margin: 0px -10px 20px -10px;
@@ -1014,6 +1018,7 @@ What is a closure?
 ]
 
 .right-column[
+.wrap[
 ```
 julia> query_iterator = iterator(query);
 
@@ -1021,6 +1026,7 @@ julia> typeof(query_iterator)
  getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")){Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
 ```
 ]
+]
 
 ---
 
@@ -1033,12 +1039,21 @@ julia> typeof(query_iterator)
 ]
 
 .right-column[
+.wrap[
 ```
 julia> query_iterator = iterator(query);
 
 julia> typeof(query_iterator)
- `getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5"))`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
+Main.JuliaCon2018.Test3.Iterate5{
+  Val{2},
+  Dict{Dates.Date,Tuple{Dates.Date,Bool}},
+  Main.JuliaCon2018.Test3.Iterate4{
+    Tuple{Array{Int64,1},
+    Array{Dates.Date,1}}
+  }
+}
 ```
+]
 ]
 
 ---
@@ -1052,25 +1067,7 @@ julia> typeof(query_iterator)
 ]
 
 .right-column[
-```
-julia> query_iterator = iterator(query);
-
-julia> typeof(query_iterator)
- `Main.JuliaCon2018.Test3.Iterate5`{Val{2},Dict{Dates.Date,Tuple{Dates.Date,Bool}},getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#4")){Tuple{Array{Int64,1},Array{Dates.Date,1}}}}
-```
-]
-
----
-
-.left-column[
-# Example
-## Interpreted
-## Compiled
-## Staged
-## Specialized
-]
-
-.right-column[
+.wrap[
 ```
 julia> fieldnames(query_iterator)
 (:key, :index, :input_iterator)
@@ -1083,6 +1080,7 @@ julia> Main.JuliaCon2018.Test3> methods(query_iterator)
 [1] (::getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")))() in Main.JuliaCon2018.Test3 at /home/jamie/JuliaCon2018/src/Test3.jl:45
 [2] (::getfield(Main.JuliaCon2018.Test3, Symbol("#iterate#5")))(state) in Main.JuliaCon2018.Test3 at /home/jamie/JuliaCon2018/src/Test3.jl:45
 ```
+]
 ]
 
 ---
@@ -1375,6 +1373,33 @@ using Rematch
 function optimize(query::Query)
   @match query begin
     `Filter(f, Filter(g, input))` => 
+      optimize(Filter((row) -> f(row) && g(row), input))
+    _ => 
+      map_query(optimize, query)
+  end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Mix and match
+## Rewriting
+]
+
+.right-column[
+```
+using Rematch
+
+function optimize(query::Query)
+  @match query begin
+    Filter(f, Filter(g, input)) => 
       optimize(`Filter((row) -> f(row) && g(row), input)`)
     _ => 
       map_query(optimize, query)
@@ -1663,6 +1688,8 @@ out-of-core data-structures => paging
 
 .footnote[https://discourse.julialang.org/t/immutables-with-reference-fields-why-boxed/7706/17]
 ]
+
+---
 
 ---
 
