@@ -159,6 +159,89 @@ Database engine, query language, probabilistic programming language, machine lea
 ---
 
 .left-column[
+# Julia
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+> ... do the metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever) for the performance-intensive systems code and the code that needs to work with massive data. 
+
+> Scala or Haskell will do well; doing it in Julia sounds more like a party trick to me.
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+... **doing it in Julia sounds more like a party trick to me** ...
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+... **metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever)**...
+]
+
+---
+
+.left-column[
+# Julia
+]
+
+.right-column[
+Julia:
+
+* Dynamic language
+* JIT
+
+= JavaScript with matrices
+]
+
+---
+
+.left-column[
+# Julia
+## ...as compiler language
+]
+
+.right-column[
+* Code as data, quasiquoting, eval
+* Algebraic datatypes\*, pattern matching, generic traversals
+* Strong, parametric, dependent* types
+* Interactive development
+]
+
+---
+
+.left-column[
+# Julia
+## ...as compiler language
+## ...as target language
+]
+
+.right-column[
+* Predictable performance, introspection
+* (Partial) control over layout, stack allocation
+* Hooks into compilation process (@generated, Cassette etc)
+* @goto
+* ccall, llvmcall, pointers
+]
+
+---
+
+.left-column[
 # State of the art
 ]
 
@@ -222,89 +305,6 @@ Multi-stage programming (≈ JIT code generation)
 Specialization - write an interpreter, get a compiler
 * RPython (https://rpython.readthedocs.io/en/latest/)
 * Graal/Truffle (https://github.com/oracle/graal)
-]
-
----
-
-.left-column[
-# Julia
-]
-
----
-
-.left-column[
-# Julia
-]
-
-.right-column[
-> ... do the metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever) for the performance-intensive systems code and the code that needs to work with massive data. 
-
-> Scala or Haskell will do well; doing it in Julia sounds more like a party trick to me.
-]
-
----
-
-.left-column[
-# Julia
-]
-
-.right-column[
-... **doing it in Julia sounds more like a party trick to me**...
-]
-
----
-
-.left-column[
-# Julia
-]
-
-.right-column[
-... **metaprogramming in (a language like) Scala and generate code (C, LLVM, Rust, whatever)**...
-]
-
----
-
-.left-column[
-# Julia
-]
-
-.right-column[
-Julia:
-
-* Dynamic language
-* JIT
-
-= JavaScript with matrices
-]
-
----
-
-.left-column[
-# Julia
-## ...as compiler language
-]
-
-.right-column[
-* Code as data, quasiquoting, eval
-* Algebraic datatypes\*, pattern matching, generic traversals
-* Strong, parametric, dependent types
-* Interactive development
-]
-
----
-
-.left-column[
-# Julia
-## ...as compiler language
-## ...as target language
-]
-
-.right-column[
-* Predictable performance, introspection
-* (Partial) control over layout, stack allocation
-* Hooks into compilation process (@generated, Cassette etc)
-* @goto
-* ccall, llvmcall, pointers
 ]
 
 ---
@@ -402,9 +402,9 @@ end
 ```
 Count(
   Filter((row) -> row[end] === true,
-  Join(2, make_index(holidays_events, 1),
-    Constant(train_mini)
-  )
+    Join(2, make_index(holidays_events, 1),
+      Constant(train_mini)
+    )
   )
 )
 ```
@@ -1130,9 +1130,9 @@ end
 ```
 Count(
   Filter((row) -> row[end] === true,
-  Join(`lift(2)`, make_index(holidays_events, 1),
-    Constant(train_mini)
-  )
+    Join(`lift(2)`, make_index(holidays_events, 1),
+      Constant(train_mini)
+    )
   )
 )
 ```
@@ -1331,6 +1331,32 @@ function optimize(query::Query)
       optimize(`Filter((row) -> f(row) && g(row), input)`)
     _ => 
       map_query(optimize, query)
+  end
+end
+```
+]
+
+---
+
+.left-column[
+# Example
+## Interpreted
+## Compiled
+## Staged
+## Specialized
+## Rewriting
+]
+
+.right-column[
+```
+using Rematch
+
+function optimize(query::Query)
+  @match query begin
+    Filter(f, Filter(g, input)) => 
+      optimize(Filter((row) -> f(row) && g(row), input))
+    _ => 
+      `map_query(optimize, query)`
   end
 end
 ```
@@ -1753,14 +1779,6 @@ All joins = 45.335596 seconds (627 allocations: 19.52 GiB, 10.35% gc time)
 Iter only = 2.891854 seconds (70 allocations: 3.094 KiB)
 
 ]
-
----
-
----
-
-class: center middle
-
-![Imp](imp-full.png)
 
 ---
 
