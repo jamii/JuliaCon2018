@@ -323,8 +323,8 @@ Julia:
 ```
 select count(*) 
 from holidays_events 
-join train 
-on holidays_events.date = train.date 
+join train_mini 
+on holidays_events.date = train_mini.date 
 where holidays_events.transferred = true;
 ```
 ]
@@ -339,8 +339,8 @@ where holidays_events.transferred = true;
 ```
  Aggregate  (cost=24799.60..24799.61 rows=1 width=0) (actual time=137.414..137.414 rows=1 loops=1)
    ->  Hash Join  (cost=7.65..24781.61 rows=7196 width=0) (actual time=0.045..137.018 rows=5515 loops=1)
-     Hash Cond: (train.date = holidays_events.date)
-     ->  Seq Scan on train  (cost=0.00..17202.00 rows=1000000 width=4) (actual time=0.004..66.110 rows=1000000 loops=1)
+     Hash Cond: (train_mini.date = holidays_events.date)
+     ->  Seq Scan on train_mini  (cost=0.00..17202.00 rows=1000000 width=4) (actual time=0.004..66.110 rows=1000000 loops=1)
      ->  Hash  (cost=7.50..7.50 rows=12 width=4) (actual time=0.031..0.031 rows=12 loops=1)
          Buckets: 1024  Batches: 1  Memory Usage: 9kB
          ->  Seq Scan on holidays_events  (cost=0.00..7.50 rows=12 width=4) (actual time=0.004..0.028 rows=12 loops=1)
@@ -403,7 +403,7 @@ end
 Count(
   Filter((row) -> row[end] === true,
   Join(2, make_index(holidays_events, 1),
-    Constant(train)
+    Constant(train_mini)
   )
   )
 )
@@ -1131,7 +1131,7 @@ end
 Count(
   Filter((row) -> row[end] === true,
   Join(`lift(2)`, make_index(holidays_events, 1),
-    Constant(train)
+    Constant(train_mini)
   )
   )
 )
@@ -1196,73 +1196,6 @@ BenchmarkTools.Trial:
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
-]
-
----
-
-.left-column[
-# Example
-## Interpreted
-## Compiled
-## Staged
-## Specialized
-## Mix and match
-]
-
-.right-column[
-```
-Count(
-  Filter(`(row) -> row[end] === true`,
-  Join(lift(2), make_index(holidays_events, 1),
-    Constant(train)
-  )
-  )
-)
-```
-]
-
----
-
-.left-column[
-# Example
-## Interpreted
-## Compiled
-## Staged
-## Specialized
-## Mix and match
-]
-
-.right-column[
-```
- function iterator(constant::Constant)
-  value = constant.value
-  function iterate(state=nothing)
-    state === nothing && (state = 1)
-    state > length(value[1]) && return nothing
-    (`get_row(value, state)`, state+1)
-  end
- end
-
- `@generated function get_row`(columns::Tuple, r)
-  quote
-    tuple($(@splice c in 1:tuple_length(columns) quote
-      columns[$c][r]
-    end))
-  end
- end
-```
-]
-
----
-
-.left-column[
-# Example
-## Interpreted
-## Compiled
-## Staged
-## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1274,7 +1207,6 @@ Count(
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1302,7 +1234,6 @@ Filter((row) -> f(row) && g(row),
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1334,7 +1265,6 @@ end
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1362,7 +1292,6 @@ end
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1389,7 +1318,6 @@ end
 ## Compiled
 ## Staged
 ## Specialized
-## Mix and match
 ## Rewriting
 ]
 
@@ -1647,6 +1575,7 @@ out-of-core data-structures => paging
 
 .right-column[
 * Tuples/rows
+* Multiple returns
 * SubArray
 * SubString
 * Default hash (Nothing, Date...)
@@ -1691,17 +1620,153 @@ out-of-core data-structures => paging
 
 ---
 
+.left-column[
+# 'Benchmarks'
+]
+
 ---
 
-class: center middle
+.left-column[
+# 'Benchmarks'
+]
 
-Party trick?
+.right-column[
+https://www.kaggle.com/c/favorita-grocery-sales-forecasting
+
+6 tables, ~14gb
+
+Want to join all tables to produce feature matrix.
+]
+
+---
+
+.left-column[
+# 'Benchmarks'
+## DataFrames
+]
+
+.right-column[
+```
+result = train
+result = join(result, items, on=[:item_nbr])
+result = join(result, unique_holidays_events, on=[:date], kind=:left)
+...
+```
+
+1st join = 23.286378 seconds (241.49 M allocations: 21.765 GiB, 8.23% gc time)
+
+2nd join = OOM
+]
+
+---
+
+.left-column[
+# 'Benchmarks'
+## DataFrames
+## JuliaDB
+]
+
+.right-column[
+```
+result = train
+result = join(result, items, lkey=:item_nbr, rkey=:item_nbr)
+result = join(result, unique_holidays_events, lkey=:date, rkey=:date, how=:left)
+...
+```
+
+(Julia 0.6)
+            
+1st join = 92.102307 seconds (203.89 M allocations: 17.548 GiB, 2.21% gc time)
+
+2nd join = UndefRefError ( https://github.com/JuliaComputing/IndexedTables.jl/issues/174)
+]
+
+---
+
+.left-column[
+# 'Benchmarks'
+## DataFrames
+## JuliaDB
+## Query
+]
+
+.right-column[
+```
+data = @from t in db.train begin
+        @join i in db.items on t.item_nbr equals i.item_nbr
+        @left_outer_join h in holidays_events on t.date equals h.date
+        ...
+        @select {t.id, t.date, t.store_nbr, t.item_nbr, t.unit_sales, t.onpromotion, i.family, i.class, i.perishable}
+        @collect DataFrame
+    end
+```
+
+(Julia 0.6)
+
+1st join = 189.424273 seconds (2.84 G allocations: 60.804 GiB, 55.03% gc time)
+
+2nd join = MethodError (https://github.com/queryverse/Query.jl/issues/169)
+]
+
+---
+
+.left-column[
+# 'Benchmarks'
+## DataFrames
+## JuliaDB
+## Query
+## Imp
+]
+
+.right-column[
+```
+train = Imp.Finger(db.train, [2,3,4,1,5,6])
+stores = Imp.Finger(db.stores)
+items = Imp.Finger(db.items)
+transactions = Imp.Finger(db.transactions, [1,2,3]; default=(Date(1,1,1), 0, 0))
+oil = Imp.Finger(db.oil, [1,2]; default=(Date(1,1,1), 0.0))
+holidays_events = Imp.Finger(db.holidays_events, [1,2,3,4,5,6]; default=(Date(1,1,1), "", "", "", "", false))
+query =
+    Imp.GenericJoin((1,4,5,6), # date
+    Imp.GenericJoin((1,2,4), # store_nbr
+    Imp.GenericJoin((1,3), # item_nbr
+    Imp.Product(1,
+    Imp.Product(2,
+    Imp.Product(3,
+    Imp.Select((
+        (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),
+        (2,2),(2,3),(2,4),(2,5),
+        (3,2),(3,3),(3,4),
+        (4,3),
+        (5,2),
+        (6,2),(6,3),(6,4),(6,5),(6,6)
+    ))))))))
+result = Imp.run(query, fingers)
+```
+
+Building indexes = 24.702670 seconds (42 allocations: 2.406 KiB)
+
+All joins = 45.335596 seconds (627 allocations: 19.52 GiB, 10.35% gc time)
+
+Iter only = 2.891854 seconds (70 allocations: 3.094 KiB)
+
+]
+
+---
 
 ---
 
 class: center middle
 
 ![Imp](imp-full.png)
+
+---
+
+---
+
+class: center middle
+
+Party trick?
 
 ---
 
